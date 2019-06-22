@@ -48,32 +48,33 @@ export default {
                 this.$message({
                   message: res.data.meta.msg,
                   type: "error"
-                });
+                })
               } else {
                 this.$message({
                   message: "登录成功！bingo",
                   type: "success"
-                });
-                this.$router.push({ name: "Home" });
+                })
+                localStorage.setItem('itcast_pro_token',res.data.data.token)
+                this.$router.push({ name: "Home" })
               }
             })
             .catch(err => {
               this.$message({
                 message: "服务器错误，请重试",
                 type: "error"
-              });
-            });
+              })
+            })
         } else {
           this.$message({
             message: "输入信息错误",
             type: "error"
-          });
-          return false;
+          })
+          return false
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 
 
