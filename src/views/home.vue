@@ -12,57 +12,17 @@
           active-text-color="#ffd04b"
         >
           <img src="../assets/logo.png" alt class="logo">
-          <el-submenu index="1">
+          <el-submenu :index="item.id+''" v-for="item in menuslist" :key="item.id">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>用户管理</span>
+              <span>{{item.authName}}</span>
             </template>
-            <el-menu-item index="/home/users">
+            <el-menu-item :index='"/home/"+children.path' v-for="children in item.children" :key="children.id">
               <template slot="title">
                 <i class="el-icon-location"></i>
-                <span>用户列表</span>
+                <span>{{children.authName}}</span>
               </template>
             </el-menu-item>
-            <el-menu-item index="1-3">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>用户权限</span>
-              </template>
-            </el-menu-item>
-          </el-submenu>
-
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>商品管理</span>
-            </template>
-            <el-menu-item index="2-3">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>商品列表</span>
-              </template>
-            </el-menu-item>
-          </el-submenu>
-
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>权限管理</span>
-            </template>
-          </el-submenu>
-
-          <el-submenu index="4">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>订单管理</span>
-            </template>
-          </el-submenu>
-
-          <el-submenu index="4">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>数据统计</span>
-            </template>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -72,17 +32,49 @@
           <h3 class="system-title">电商后台管理系统</h3>
           <div class="welcome">
             <span>你好：admin</span> &nbsp;&nbsp;
-            <a href="javascript:;">退出</a>
+            <a href="javascript:;" @click="loginout">退出</a>
           </div>
         </el-header>
         <el-main><router-view></router-view></el-main>
       </el-container>
     </el-container>
+    <el-button @click="chuanzhi">传值</el-button>
+    <child ref="childRef" @ccccc="aa"></child>
   </div>
 </template>
 
 <script>
-export default {};
+import {getmenus} from '@/api/users.js'
+import child from "./child";
+import eventBus from "../assets/js/eventBus";
+export default {
+  components: {child},
+  data () {
+    return {
+       menuslist:[],
+    }
+  },
+  methods: {
+    loginout(){
+      localStorage.removeItem('itcast_pro_token')
+      this.$router.push({name: 'Login'})
+    },
+    aa(val) {
+      console.log('这是从子组件传过来的:'+ val)
+    },
+    chuanzhi() {
+      // this.$refs.childRef.dd({"dd": 1111});
+      eventBus.$emit("name", '这是从首页传过去的')
+    }
+  },
+  mounted () {
+    getmenus()
+    .then(res=>{
+      console.log(res);
+      this.menuslist = res.data.data
+    })
+  }
+};
 </script>
 
 <style lang="less" scoped>

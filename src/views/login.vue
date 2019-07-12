@@ -22,7 +22,8 @@
 </template>
 
 <script>
-import { userlogin } from "../api/login";
+//引入登录api
+import { userlogin } from "../api/users";
 export default {
   data() {
     return {
@@ -42,6 +43,7 @@ export default {
     login() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
+          //表单校验成功后，调用登录
           userlogin(this.loginForm)
             .then(res => {
               if (res.data.meta.status === 400) {
@@ -54,7 +56,9 @@ export default {
                   message: "登录成功！bingo",
                   type: "success"
                 })
+                //获取服务器发送过来的token值，并存储到本地
                 localStorage.setItem('itcast_pro_token',res.data.data.token)
+                //登录成功进行路由跳转
                 this.$router.push({ name: "Home" })
               }
             })

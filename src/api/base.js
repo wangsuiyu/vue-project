@@ -12,18 +12,4 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error)
 })
 
-export var userlogin = (data) => {
-  return axios({
-    url: 'login',
-    method: 'post',
-    data: data
-  })
-}
-
-export var getuserdata = (params) => {
-  return axios({
-    url: 'users',
-    method: 'get',
-    params: params
-  })
-}
+export default axios
